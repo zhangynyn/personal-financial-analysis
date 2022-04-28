@@ -1,4 +1,4 @@
-FROM python:3
+FROM --platform=linux/amd64 python:3
 SHELL [ "/bin/bash", "-c"]
 
 RUN apt update && apt install -y sudo vim bash-completion
