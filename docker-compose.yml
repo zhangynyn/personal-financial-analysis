@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:14
+    ports:
+      - "5432"
+    environment:
+      POSTGRES_PASSWORD: "123456"
+    networks:
+      - pfa-net
+
+  pfa:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - type: bind
+        source: .
+        target: /home/dev/pfa
+    tty: true
+    depends_on:
+      - db
+    networks:
+      - pfa-net
+
+networks:
+  pfa-net:
