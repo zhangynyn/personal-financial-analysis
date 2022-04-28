@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   db:
+    container_name: db
     image: postgres:14
     ports:
       - "5432"
@@ -19,6 +20,7 @@ services:
         source: .
         target: /home/dev/pfa
     tty: true
+    platform: linux/amd64
     depends_on:
       - db
     networks:
