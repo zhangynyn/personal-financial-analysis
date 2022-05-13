@@ -47,4 +47,4 @@ class Postgres:
                     rows,
                 )
 
-        print("store_dataframe() done")
+        print(f"store_dataframe() done, {len(rows)} records loaded...")

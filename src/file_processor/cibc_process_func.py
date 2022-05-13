@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 import uuid
 from pathlib import Path
 from src.db.postgres import Postgres
@@ -19,39 +20,44 @@ class Cibc_Preprocessor(FileProcessor):
         df["Institution"] = ["CIBC"] * len(df.index)
         arrage_columns = ["UUID", "Institution"] + self.columns
         df = df[arrage_columns]
+        print(f'{df.shape[0]} rows processed...')
 
         return df
 
 
-def process_credit_data(credit_path, columns, table_name):
-    data_path = project_root.joinpath(project_root, credit_path)
+def process_data(file_path, columns, table_name):
 
-    pc = Cibc_Preprocessor(file_path=data_path, columns=columns)
-    credit_df = pc.preprocess()
-
-    pg = Postgres()
-    pg.store_dataframe(credit_df, table_name)
-
-
-# Chequing
-def process_chequing_data(chequing_path, columns, table_name):
-    data_path = project_root.joinpath(project_root, chequing_path)
-
-    pc = Cibc_Preprocessor(file_path=data_path, columns=columns)
-    chequing_df = pc.preprocess()
-    print(chequing_df.head())
+    pc = Cibc_Preprocessor(file_path=file_path, columns=columns)
+    df = pc.preprocess()
 
     pg = Postgres()
-    pg.store_dataframe(chequing_df, table_name)
+    pg.store_dataframe(df, table_name)
 
+
+def process_current_diretory(data_directory, credit_columns, chequing_columns):
+    count = 0
+    for filename in os.listdir(data_directory):
+        file_path = os.path.join(data_directory, filename)
+        if os.path.isfile(file_path):
+            if filename.split("-")[0] == "credit":
+                process_data(file_path, credit_columns, "credit")
+                count += 1
+                print("---------------*****--------------")
+            if filename.split("-")[0] == "chequing":
+                process_data(file_path, chequing_columns, "chequing")
+                count += 1
+                print("---------------*****--------------")
+
+    print(
+        f"A total of {count} files in current directory has been loaded to database..."
+    )
 
 if __name__ == "__main__":
-    project_root = Path(".")
 
-    CREDIT_COLUMNS = ["TransDate", "TransDetails", "Debits", "Credits", "CardNumber"]
-    CREDIT_PATH = "src/data/cibc-credit.csv"
-    process_credit_data(CREDIT_PATH, CREDIT_COLUMNS, "cibc_credit")
-
+    CREDIT_COLUMNS = ["TransDate", "TransDetails", "Debts", "Credits", "CardNumber"]
     CHEQUING_COLUMNS = ["TransDate", "TransDetails", "Withdrawals", "Deposits"]
-    CHEQUING_PATH = "src/data/cibc-chequing.csv"
-    process_chequing_data(CHEQUING_PATH, CHEQUING_COLUMNS, "chequing")
+
+    directory = os.getcwd()
+    data_directory = directory + "/src/data/cibc"
+
+    process_current_diretory(data_directory=data_directory,credit_columns=CREDIT_COLUMNS, chequing_columns=CHEQUING_COLUMNS)

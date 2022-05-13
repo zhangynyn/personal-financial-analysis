@@ -1,14 +1,14 @@
 from src.db.postgres import Postgres
 
 sqls = [
-    """DROP TABLE IF EXISTS cibc_credit;""",
+    """DROP TABLE IF EXISTS credit;""",
     """
     CREATE TABLE credit(
         Uuid VARCHAR(50),
         Institution VARCHAR(10),
         TransDate DATE NOT NULL,
         TransDetails TEXT,
-        Debits NUMERIC,
+        Debts NUMERIC,
         Credits NUMERIC,
         CardNumber VARCHAR(20),
         PRIMARY KEY(Institution,TransDate,TransDetails)
