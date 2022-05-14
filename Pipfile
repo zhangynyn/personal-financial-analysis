@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 psycopg = {extras = ["binary", "pool"], version = "*"}
+numpy = "*"
+pandas = "*"
 
 [dev-packages]
 black = "*"
