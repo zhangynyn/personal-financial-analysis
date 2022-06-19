@@ -1,4 +1,5 @@
 from src.db.postgres import Postgres
+from src.db.dbconfig import DBConfig
 
 sqls = [
     """DROP TABLE IF EXISTS credit;""",
@@ -31,7 +32,9 @@ sqls = [
 
 def replay():
     print("Migrating database...")
-    pg = Postgres()
+    config = DBConfig("mydatabase-instance.czsr2ijvkrza.us-east-1.rds.amazonaws.com", 
+                      5432, "postgres", "postgres", "Nangua1208")
+    pg = Postgres(config=config)
     for sql in sqls:
         print(sql)
         pg.query(sql)

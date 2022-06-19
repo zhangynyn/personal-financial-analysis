@@ -4,6 +4,7 @@ import uuid
 import os
 from pathlib import Path
 from src.db.postgres import Postgres
+from src.db.dbconfig import CloudConfig
 from src.file_processor.file_process_func import FileProcessor
 
 
@@ -70,7 +71,7 @@ def process_data(file_path, columns, table_name):
     pc = Scotia_Preprocessor(file_path=file_path, columns=columns)
     df = pc.preprocess(file_type=table_name)
 
-    pg = Postgres()
+    pg = Postgres(CloudConfig)
     pg.store_dataframe(df, table_name)
 
 def process_current_diretory(data_directory, credit_columns, chequing_columns):

@@ -12,7 +12,7 @@ class DataAPI:
     def _pg(self):
         return Postgres()
 
-    def get_transactions_in_dates(self, start_date: date, end_date: date, account_type: AccountType) -> List:
+    def get_transactions_in_dates(self, start_date: date, end_date: date, account_type: AccountType) -> pd.DataFrame:
         table = AccountToTable[account_type]
         sql = f"""
             SELECT * FROM {table}
